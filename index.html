@@ -191,6 +191,7 @@
 </div>
 
 <script type="module">
+    let selectedDrink = ""; // This will store the choice
   // 1. Import the specific tools we need: App and Firestore
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -210,35 +211,45 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
+ // This makes the function globally accessible to your buttons
+window.selectDrink = function(drink, element) {
+    selectedDrink = drink;
+    
+    // Updates the hidden input field for the form submission
+    document.getElementById('selectedDrink').value = drink;
+
+    // Visual feedback: remove 'active' from all cards and add it to the clicked one
+    document.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
+    element.classList.add('active');
+};
+
   // 4. Handle Order Submission
   const orderForm = document.getElementById('orderForm');
-  
   if(orderForm) {
-      orderForm.addEventListener('submit', async (e) => {
-          e.preventDefault();
+    orderForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-          // This pulls the data from your input fields
-          const orderData = {
-              customerName: document.getElementById('name').value,
-              whatsapp: document.getElementById('phone').value,
-              roomNumber: document.getElementById('room').value,
-              quantity: document.getElementById('quantity').value,
-              // If you have a variable for the drink choice, add it here:
-              // drink: selectedDrink, 
-              timestamp: serverTimestamp() 
-          };
+        const orderData = {
+            customerName: document.getElementById('name').value,
+            whatsapp: document.getElementById('phone').value,
+            roomNumber: document.getElementById('room').value,
+            quantity: document.getElementById('quantity').value,
+            drinkChoice: selectedDrink, // <--- THIS IS THE KEY ADDITION
+            timestamp: serverTimestamp() 
+        };
 
-          try {
-              // This line sends the data to a folder called "orders" in Firebase
-              const docRef = await addDoc(collection(db, "orders"), orderData);
-              alert("Order received! We'll contact you soon. ID: " + docRef.id);
-              orderForm.reset();
-          } catch (error) {
-              console.error("Error saving order: ", error);
-              alert("Wait, something went wrong. Check if you enabled 'Test Mode' in Firestore.");
-          }
-      });
-  }
+        try {
+            const docRef = await addDoc(collection(db, "orders"), orderData);
+            alert("Order received! We'll contact you soon. ID: " + docRef.id);
+            orderForm.reset();
+            // Optional: reset the visual 'active' state of your cards
+            document.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
+        } catch (error) {
+            console.error("Error saving order: ", error);
+            alert("Wait, something went wrong.");
+        }
+    });
+}
 </script>
 
 </body>
