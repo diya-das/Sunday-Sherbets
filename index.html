@@ -190,43 +190,55 @@
     </footer>
 </div>
 
-<script>
-    let selectedDrink = "";
+<script type="module">
+  // 1. Import the specific tools we need: App and Firestore
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    function selectDrink(drink, element) {
-        selectedDrink = drink;
-        document.getElementById('selectedDrink').value = drink;
-        
-        // Remove active class from all
-        document.querySelectorAll('.option-card').forEach(card => {
-            card.classList.remove('active');
-        });
-        // Add to clicked
-        element.classList.add('active');
-    }
+  // 2. Your specific Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDMNyEmudLLzM_XrrhVSZ9Mhlpd73929WY",
+    authDomain: "sunday-sherbets.firebaseapp.com",
+    projectId: "sunday-sherbets",
+    storageBucket: "sunday-sherbets.firebasestorage.app",
+    messagingSenderId: "824669180480",
+    appId: "1:824669180480:web:a50139cf58682eee9c05a5",
+    measurementId: "G-BH5QVREMKZ"
+  };
 
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const name = document.getElementById('name').value;
-        const phone = document.getElementById('phone').value;
-        const room = document.getElementById('room').value;
-        const drink = document.getElementById('selectedDrink').value;
-        const qty = document.getElementById('quantity').value;
+  // 3. Initialize Firebase and the Database
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-        if(!drink) {
-            alert("Please pick a drink first!");
-            return;
-        }
+  // 4. Handle Order Submission
+  const orderForm = document.getElementById('orderForm');
+  
+  if(orderForm) {
+      orderForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
 
-        // For now, we'll just alert. 
-        // In a real app, you'd send this to a Google Sheet or WhatsApp.
-        alert(`Order Received, ${name}!\n${qty}x ${drink} coming to ${room}.`);
-        
-        // Reset form
-        this.reset();
-        document.querySelectorAll('.option-card').forEach(card => card.classList.remove('active'));
-    });
+          // This pulls the data from your input fields
+          const orderData = {
+              customerName: document.getElementById('name').value,
+              whatsapp: document.getElementById('phone').value,
+              roomNumber: document.getElementById('room').value,
+              quantity: document.getElementById('quantity').value,
+              // If you have a variable for the drink choice, add it here:
+              // drink: selectedDrink, 
+              timestamp: serverTimestamp() 
+          };
+
+          try {
+              // This line sends the data to a folder called "orders" in Firebase
+              const docRef = await addDoc(collection(db, "orders"), orderData);
+              alert("Order received! We'll contact you soon. ID: " + docRef.id);
+              orderForm.reset();
+          } catch (error) {
+              console.error("Error saving order: ", error);
+              alert("Wait, something went wrong. Check if you enabled 'Test Mode' in Firestore.");
+          }
+      });
+  }
 </script>
 
 </body>
