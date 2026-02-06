@@ -148,42 +148,34 @@
         <p class="subtitle">Freshly pressed. Delivered to your room.</p>
     </header>
 
-    <form id="orderForm">
-        <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="E.g. Diya Das" required>
+<form id="orderForm">
+    <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" placeholder="E.g. Diya Das" required>
+    </div>
+    <div class="form-group">
+        <label for="phone">WhatsApp Number</label>
+        <input type="tel" id="phone" placeholder="10-digit mobile" required>
+    </div>
+    <div class="form-group">
+        <label for="room">Room Number</label>
+        <input type="text" id="room" placeholder="E.g. 122" required>
+    </div>
+
+    <label>Choose Your Drink Quantities</label>
+    <div class="drink-options">
+        <div class="option-row" style="margin-bottom: 1.2rem;">
+            <label for="lemon_qty" style="color: #4a4a4a; text-transform: none;">Lemon Sherbet (₹30)</label>
+            <input type="number" id="lemon_qty" min="0" max="10" value="0">
         </div>
 
-        <div class="form-group">
-            <label for="phone">WhatsApp Number</label>
-            <input type="tel" id="phone" placeholder="10-digit mobile" required>
+        <div class="option-row">
+            <label for="kokum_qty" style="color: #4a4a4a; text-transform: none;">Kokum Sherbet (₹25)</label>
+            <input type="number" id="kokum_qty" min="0" max="10" value="0">
         </div>
-
-        <div class="form-group">
-            <label for="room">Room Number</label>
-            <input type="text" id="room" placeholder="E.g. 122" required>
-        </div>
-
-        <label>Choose Your Drink</label>
-        <div class="drink-options">
-            <div class="option-card lemon" onclick="selectDrink('Lemon Sherbet', this)">
-                <strong>Lemon</strong>
-                <p>₹30</p>
-            </div>
-            <div class="option-card kokum" onclick="selectDrink('Kokum Sherbet', this)">
-                <strong>Kokum</strong>
-                <p>₹25</p>
-            </div>
-        </div>
-        <input type="hidden" id="selectedDrink" required>
-
-        <div class="form-group" style="margin-top: 1.2rem;">
-            <label for="quantity">How many glasses?</label>
-            <input type="number" id="quantity" min="1" max="10" value="1" required>
-        </div>
-
-        <button type="submit" class="btn-submit">Place Order</button>
-    </form>
+    </div>
+    <button type="submit" class="btn-submit">Place Order</button>
+</form>
 
     <footer>
         Handcrafted by Balla Spinner &bull; From the Heart of Butibori
