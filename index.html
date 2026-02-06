@@ -225,8 +225,9 @@ window.selectDrink = function(drink, element) {
             customerName: document.getElementById('name').value,
             whatsapp: document.getElementById('phone').value,
             roomNumber: document.getElementById('room').value,
-            quantity: document.getElementById('quantity').value,
-            drinkChoice: selectedDrink, // <--- THIS IS THE KEY ADDITION
+            // Read the two separate quantities
+            lemonQuantity: parseInt(document.getElementById('lemon_qty').value) || 0,
+            kokumQuantity: parseInt(document.getElementById('kokum_qty').value) || 0,
             timestamp: serverTimestamp() 
         };
 
